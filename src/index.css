@@ -1,0 +1,283 @@
+/* 
+1. 导入 Tailwind 核心 + 外部字体
+2. @theme 自定义 Tailwind 主题（颜色/字体/阴影/圆角）
+3. :root 定义普通 CSS 全局变量（不生成工具类）
+4. .dark 暗色模式主题覆盖
+5. @layer base{} 全局样式重置（基础 CSS 初始化）
+ */
+
+@import "tailwindcss";
+
+/* 引入谷歌字体：Poppins（普通字体）、Sono（等宽字体） */
+/* 字体：如果你已经在 HTML 里用 <link> 引入，这两行可以删掉 */
+/* @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap"); */
+/* @import url("https://fonts.googleapis.com/css2?family=Sono:wght@400;500;600&display=swap"); */
+
+/* 这是 Tailwind v4 新语法，定义的所有变量，自动生成对应的工具类（直接在 HTML 用）。 */
+@theme {
+  /* Fonts */
+  --font-sans: "Poppins", sans-serif; /* 覆盖默认无衬线字体 */
+  --font-mono: "Sono", monospace; /* 覆盖默认等宽字体 */
+
+  /* 品牌色（主色调） */
+  /* Indigo */
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-200: #c7d2fe;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
+  --color-brand-800: #3730a3;
+  --color-brand-900: #312e81;
+
+  /* 灰色系（界面基础色） */
+  /* Grey */
+  --color-jonas-gray-0: #fff;
+  --color-jonas-gray-50: #f9fafb;
+  --color-jonas-gray-100: #f3f4f6;
+  --color-jonas-gray-200: #e5e7eb;
+  --color-jonas-gray-300: #d1d5db;
+  --color-jonas-gray-400: #9ca3af;
+  --color-jonas-gray-500: #6b7280;
+  --color-jonas-gray-600: #4b5563;
+  --color-jonas-gray-700: #374151;
+  --color-jonas-gray-800: #1f2937;
+  --color-jonas-gray-900: #111827;
+
+  /* 功能色 */
+  --color-jonas-blue-100: #e0f2fe;
+  --color-jonas-blue-700: #0369a1;
+  --color-jonas-green-100: #dcfce7;
+  --color-jonas-green-700: #15803d;
+  --color-jonas-yellow-100: #fef9c3;
+  --color-jonas-yellow-700: #a16207;
+  --color-jonas-silver-100: #e5e7eb;
+  --color-jonas-silver-700: #374151;
+  --color-jonas-indigo-100: #e0e7ff;
+  --color-jonas-indigo-700: #4338ca;
+  --color-jonas-red-100: #fee2e2;
+  --color-jonas-red-700: #b91c1c;
+  --color-jonas-red-800: #991b1b;
+
+  /* Shadow */
+  /* --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04); */
+  /* --shadow-md: 0 0.6rem 2.4rem rgba(0, 0, 0, 0.06); */
+  /* --shadow-lg: 0 2.4rem 3.2rem rgba(0, 0, 0, 0.12); */
+
+  /* Radius */
+  /* --radius-tiny: 3px; */
+  /* --radius-sm: 5px; */
+  /* --radius-md: 7px; */
+  /* --radius-lg: 9px; */
+}
+
+/* 只用于运行时的普通 CSS 变量，不需要生成 Tailwind 工具类 */
+:root {
+  --backdrop-color: rgba(255, 255, 255, 0.1);
+  --image-grayscale: 0;
+  --image-opacity: 100%;
+}
+
+/* 暗色模式：完整修正变量名 + 统一色阶语义 + 全量覆盖 */
+.dark {
+  /* 核心：让原生 white/black 跟随主题反转 */
+  --color-white: var(--color-jonas-gray-0); /* 暗黑下"纯白"变为深底色 */
+  --color-black: var(--color-jonas-gray-900); /* 暗黑下"纯黑"变为最亮文字色 */
+
+  /* ========== 1. 中性灰（最常用，背景/文字/边框全局适配） ==========
+     语义保持：bg-gray-50 永远是页面底色，text-gray-900 永远是最重标题
+     浅色下色号越小越浅，暗黑下色号越小越深，使用场景完全对应 */
+  --color-gray-0: #0b1220;
+  --color-gray-50: #0f172a;
+  --color-gray-100: #1e293b;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+  --color-gray-400: #64748b;
+  --color-gray-500: #94a3b8;
+  --color-gray-600: #cbd5e1;
+  --color-gray-700: #e2e8f0;
+  --color-gray-800: #f1f5f9;
+  --color-gray-900: #f8fafc;
+
+  /* ========== 2. 功能色（状态提示/按钮/标签适配） ==========
+     深色背景下提亮主色调，保证对比度与视觉层级，
+     保持「100 做背景、700 做文字」的语义不变 */
+  --color-red-50: #450a0a;
+  --color-red-100: #7f1d1d;
+  --color-red-500: #f87171;
+  --color-red-600: #ef4444;
+  --color-red-700: #dc2626;
+
+  --color-green-50: #052e16;
+  --color-green-100: #14532d;
+  --color-green-500: #4ade80;
+  --color-green-600: #22c55e;
+  --color-green-700: #16a34a;
+
+  --color-blue-50: #0c1e3e;
+  --color-blue-100: #1e3a8a;
+  --color-blue-500: #60a5fa;
+  --color-blue-600: #3b82f6;
+  --color-blue-700: #2563eb;
+
+  --color-yellow-50: #2e1b04;
+  --color-yellow-100: #713f12;
+  --color-yellow-500: #facc15;
+  --color-yellow-600: #eab308;
+  --color-yellow-700: #ca8a04;
+
+  --color-indigo-50: #1e1b4b;
+  --color-indigo-100: #312e81;
+  --color-indigo-500: #818cf8;
+  --color-indigo-600: #6366f1;
+  --color-indigo-700: #4f46e5;
+
+  --color-orange-50: #431407;
+  --color-orange-100: #7c2d12;
+  --color-orange-500: #fb923c;
+  --color-orange-600: #f97316;
+  --color-orange-700: #ea580c;
+
+  /* 灰色系：色阶完全反转，保持 0=页面背景 / 900=最亮文字 的语义不变 */
+  --color-jonas-gray-0: #0f172a;
+  --color-jonas-gray-50: #111827;
+  --color-jonas-gray-100: #1f2937;
+  --color-jonas-gray-200: #374151;
+  --color-jonas-gray-300: #4b5563;
+  --color-jonas-gray-400: #6b7280;
+  --color-jonas-gray-500: #9ca3af;
+  --color-jonas-gray-600: #d1d5db;
+  --color-jonas-gray-700: #e5e7eb;
+  --color-jonas-gray-800: #f3f4f6;
+  --color-jonas-gray-900: #f9fafb;
+
+  /* 品牌色：深色下提亮主色，保证对比度与视觉层级 */
+  --color-brand-50: #1e1b4b;
+  --color-brand-100: #312e81;
+  --color-brand-200: #3730a3;
+  --color-brand-500: #818cf8;
+  --color-brand-600: #6366f1;
+  --color-brand-700: #4f46e5;
+  --color-brand-800: #4338ca;
+  --color-brand-900: #3730a3;
+
+  /* 功能色：保持「100=背景色、700=文字色」的语义，深浅反转适配深色背景 */
+  --color-jonas-blue-100: #0c4a6e;
+  --color-jonas-blue-700: #e0f2fe;
+  --color-jonas-green-100: #14532d;
+  --color-jonas-green-700: #dcfce7;
+  --color-jonas-yellow-100: #713f12;
+  --color-jonas-yellow-700: #fef9c3;
+  --color-jonas-silver-100: #374151;
+  --color-jonas-silver-700: #f3f4f6;
+  --color-jonas-indigo-100: #312e81;
+  --color-jonas-indigo-700: #e0e7ff;
+  --color-jonas-red-100: #7f1d1d;
+  --color-jonas-red-700: #fecaca;
+  --color-jonas-red-800: #fca5a5;
+
+  /* 全局辅助变量 */
+  --backdrop-color: rgba(0, 0, 0, 0.4);
+  --image-grayscale: 10%;
+  --image-opacity: 90%;
+}
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    padding: 0;
+    margin: 0;
+  }
+
+  html {
+    transition:
+      background-color 0.2s ease-out,
+      color 0.2s ease-out;
+  }
+
+  body {
+    min-height: 100vh;
+    line-height: 1.5;
+    font-size: 1.2rem;
+    font-family: var(--font-sans);
+    color: var(--color-jonas-gray-700);
+    background-color: var(--color-jonas-gray-0);
+    transition:
+      color 0.2s ease-out,
+      background-color 0.2s ease-out;
+  }
+
+  input,
+  button,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :disabled {
+    cursor: not-allowed;
+  }
+
+  select:disabled,
+  input:disabled {
+    background-color: var(--color-jonas-gray-200);
+    color: var(--color-jonas-gray-500);
+  }
+
+  :is(input, button, textarea, select):focus-visible {
+    outline: 2px solid var(--color-brand-600);
+    outline-offset: -1px;
+  }
+
+  button:has(svg) {
+    line-height: 0;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  ul {
+    list-style: none;
+  }
+
+  p,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+
+  img {
+    max-width: 100%;
+    filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  50% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 2s ease-in-out infinite;
+}
