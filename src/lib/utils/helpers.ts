@@ -43,14 +43,15 @@ export function formatDistanceFromNow(date: string | Date | number) {
 // 但是！每次组件重新渲染，毫秒/秒都会变，导致字符串不一样，这会出问题
 // 所以我们用这个小技巧：把「时分秒毫秒」全部清空/固定
 export function getToday(options: { end?: boolean } = {}): string {
+  // 1. 获取当前系统时间（包含年、月、日、时、分、秒、毫秒）
   const today = new Date();
 
   // This is necessary to compare with created_at from Supabase, because it is not at 0.0.0.0, so we need to set the date to be END of the day when we compare it with earlier dates
   if (options?.end)
-    today.setUTCHours(23, 59, 59, 999); // 固定为：当天最后一毫秒 23:59:59.999
-  else today.setUTCHours(0, 0, 0, 0); // 固定为：当天 0点整 00:00:00.000
+    today.setUTCHours(23, 59, 59, 999); // 设为当天的最后一毫秒：23:59:59.999 (UTC)
+  else today.setUTCHours(0, 0, 0, 0); // 设为当天的起点：00:00:00.000 (UTC)
 
-  return today.toISOString(); // 返回固定不变的 ISO 字符串
+  return today.toISOString(); // 3. 转为 ISO 8601 标准字符串返回，末尾带 "Z" 表示 UTC
 }
 
 export function formateCurrency(val: number) {

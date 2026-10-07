@@ -1,4 +1,5 @@
 import * as z from "zod";
+
 import type {
   BookingSchema,
   CabinSchema,
@@ -48,6 +49,20 @@ export type ItemOfGetBookings = Booking & {
   guests: {
     fullName: string;
     email: string;
+  };
+};
+
+//  最近预订统计项（仅包含销售额、杂费等字段）
+export interface ItemOfGetBookingsAfterDate {
+  created_at: string;
+  totalPrice: number;
+  extraPrice: number;
+}
+
+// （顺便把后面 useRecentStays 要用的住宿项也定义好）
+export type ItemOfGetStaysAfterDate = Booking & {
+  guests: {
+    fullName: string;
   };
 };
 

@@ -1,9 +1,13 @@
+import { getToday } from "~/lib/utils/helpers";
+
 import { PAGE_SIZE } from "../lib/constants";
 import type {
   Booking,
   FilterMethod,
   ItemOfGetBooking,
   ItemOfGetBookings,
+  ItemOfGetBookingsAfterDate,
+  ItemOfGetStaysAfterDate,
 } from "../types/types";
 import supabase from "./supabase";
 
@@ -31,89 +35,70 @@ export async function getBookings({
   data: ItemOfGetBookings[];
   count: number | null;
 }> {
-  try {
-    // count: "exact" 表示返回 exact 总记录数
-    // 这是分页查询的重要参数，用于计算总页数
-    // 例如：totalPage = Math.floor(totalBookings / maxVisibleElement)
-    let query = supabase
-      .from("bookings")
-      .select("*, cabins(name), guests(fullName,email)", { count: "exact" });
+  // count: "exact" 表示返回 exact 总记录数
+  // 这是分页查询的重要参数，用于计算总页数
+  // 例如：totalPage = Math.floor(totalBookings / maxVisibleElement)
+  let query = supabase
+    .from("bookings")
+    .select("*, cabins(name), guests(fullName,email)", { count: "exact" });
 
-    // 1. 处理筛选逻辑
-    if (filter) {
-      // 使用 .filter() 代替动态属性访问 query[method]
-      const operator = filter.method || "eq";
-      query = query.filter(filter.field, operator, filter.value);
-    }
-
-    // 2. 处理排序逻辑 (假设你原本有这部分逻辑)
-    if (sortBy) {
-      const field = sortBy.field;
-      query = query.order(field, { ascending: !sortBy.isDesc });
-    }
-
-    // 3. 处理分页逻辑
-    if (page) {
-      const from = (page - 1) * PAGE_SIZE;
-      const to = from + PAGE_SIZE - 1;
-      query = query.range(from, to);
-    }
-
-    const { data, error, count } = await query;
-    if (error) {
-      console.error(error);
-      throw new Error("获取 bookings 失败");
-    }
-    // 返回什么数据要标明类型
-    return { data, count };
-  } catch (err) {
-    console.error(err);
-    throw err instanceof Error
-      ? err
-      : new Error("获取 bookings 时发生未知错误");
+  // 1. 处理筛选逻辑
+  if (filter) {
+    // 使用 .filter() 代替动态属性访问 query[method]
+    const operator = filter.method || "eq";
+    query = query.filter(filter.field, operator, filter.value);
   }
+
+  // 2. 处理排序逻辑 (假设你原本有这部分逻辑)
+  if (sortBy) {
+    const field = sortBy.field;
+    query = query.order(field, { ascending: !sortBy.isDesc });
+  }
+
+  // 3. 处理分页逻辑
+  if (page) {
+    const from = (page - 1) * PAGE_SIZE;
+    const to = from + PAGE_SIZE - 1;
+    query = query.range(from, to);
+  }
+
+  const { data, error, count } = await query;
+  if (error) {
+    console.error(error);
+    throw new Error("获取 bookings 失败");
+  }
+  // 返回什么数据要标明类型
+  return { data, count };
 }
 
 // 获取单个预订详情
 export async function getBooking(id: number): Promise<ItemOfGetBooking> {
-  try {
-    const { data, error } = await supabase
-      .from("bookings")
-      .select("*, cabins(*), guests(*)")
-      .eq("id", id)
-      .single();
-    if (error) {
-      console.error(error);
-      throw new Error("获取预订详情失败");
-    }
-    // 返回什么数据要标明类型
-    return data;
-  } catch (error) {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, cabins(*), guests(*)")
+    .eq("id", id)
+    .single();
+  if (error) {
     console.error(error);
-    throw error instanceof Error
-      ? error
-      : new Error("获取预订详情时发生未知错误");
+    throw new Error("获取预订详情失败");
   }
+  // 返回什么数据要标明类型
+  return data;
 }
 
 export async function updateBooking(id: number, booking: Partial<Booking>) {
-  try {
-    const { data, error } = await supabase
-      .from("bookings")
-      .update(booking)
-      .eq("id", id)
-      .select()
-      .single();
+  const { data, error } = await supabase
+    .from("bookings")
+    .update(booking)
+    .eq("id", id)
+    .select()
+    .single();
 
-    if (error) {
-      console.error(error);
-      throw new Error("更新预订失败");
-    }
-    return data;
-  } catch (error) {
+  if (error) {
     console.error(error);
-    throw error instanceof Error ? error : new Error("更新预订时发生未知错误");
+    throw new Error("更新预订失败");
   }
+  return data;
 }
 
 export async function delBooking(id: number) {
@@ -123,4 +108,36 @@ export async function delBooking(id: number) {
     console.error(error);
     throw new Error("预订删除失败");
   }
+}
+
+// 获取指定日期之后创建的所有预订（用于统计近期销售额等）
+export async function getBookingsAfterDate(
+  date: string,
+): Promise<ItemOfGetBookingsAfterDate[]> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("created_at, totalPrice, extraPrice")
+    .gte("created_at", date)
+    .lte("created_at", getToday({ end: true }));
+  if (error) {
+    console.error(error);
+    throw new Error("获取预订记录失败");
+  }
+  return data;
+}
+
+// 获取指定日期之后的实际入住/留宿记录（用于统计近期入住率、留宿时长等）
+export async function getStaysAfterDate(
+  date: string,
+): Promise<ItemOfGetStaysAfterDate[]> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, guests(fullName)")
+    .gte("startDate", date)
+    .lte("startDate", getToday());
+  if (error) {
+    console.error(error);
+    throw new Error("获取入住记录失败");
+  }
+  return data;
 }

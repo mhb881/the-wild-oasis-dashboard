@@ -22,7 +22,10 @@
     "noFallthroughCasesInSwitch": true,
     // 关闭 TS 原生的未使用变量/参数检查，交给 ESLint
     "noUnusedLocals": false,
-    "noUnusedParameters": false
+    "noUnusedParameters": false,
+    "paths": {
+      "~/*": ["./src/*"]
+    }
   },
   "include": ["src"]
 }

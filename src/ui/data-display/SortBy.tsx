@@ -64,4 +64,3 @@ function SortBy({ options }: SortByProps) {
 }
 
 export default SortBy;
-
