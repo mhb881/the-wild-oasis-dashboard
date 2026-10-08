@@ -1,55 +1,36 @@
-import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 
 import type { SettingInput } from "../../types/types";
-import { Form, FormRow, Input, Label, Spinner } from "../../ui";
+import { Empty, Form, FormRow, Input, Label, Spinner } from "../../ui";
 import useSettings from "./useSettings";
 import useUpdateSettings from "./useUpdateSettings";
-/*
-问题
-
-问题原因：
-当页面刷新时，useForm 的 defaultValues 在组件挂载时只设置一次，
-但此时 settings 数据还未加载完成（处于 isPending 状态），导致初始默认值为 undefined。
-后续数据加载完成后，表单值不会自动更新。
-
-解决方案：
-使用 useForm 的 reset 函数配合 useEffect，在 settings 数据加载完成后动态重置表单值。
-   */
 
 function UpdateSettingsForm() {
-  const { settings, isPending } = useSettings();
+  const { settings, isPending, error } = useSettings();
   const { isUpdating, updateSettingsMutate } = useUpdateSettings();
 
-  const { register, formState, reset, trigger, getValues } =
-    useForm<SettingInput>({
-      defaultValues: settings,
-    });
+  const { register, formState, trigger, getValues } = useForm<SettingInput>({
+    values: settings,
+  });
   const { errors } = formState;
 
   const handleOnBlur = async (field: keyof SettingInput) => {
     const value = getValues(field);
-    if (!value) return;
+    if (value === undefined || value === null || isNaN(Number(value))) return;
     if (!settings || Number(settings[field]) === Number(value)) return;
+
     // 先触发该字段的验证
     const isValid = await trigger(field);
     if (isValid) {
-      // 验证通过后，获取当前表单所有值并更新
-      const formValues = getValues();
-      updateSettingsMutate(formValues);
+      // 验证通过后更新字段
+      updateSettingsMutate({
+        [field]: Number(value),
+      });
     }
   };
 
-  // 只在组件首次挂载时初始化表单值
-  const isInitialized = useRef(false);
-  useEffect(() => {
-    if (settings && !isInitialized.current) {
-      reset(settings);
-      isInitialized.current = true;
-    }
-  }, [reset, settings]);
-
   if (isPending) return <Spinner />;
+  if (error || !settings) return <Empty resourceName="酒店设置" />;
 
   return (
     <Form>
@@ -59,11 +40,14 @@ function UpdateSettingsForm() {
           type="number"
           id="min-nights"
           disabled={isUpdating}
+          defaultValue={settings.minBookingLength}
           {...register("minBookingLength", {
             required: { value: true, message: "请输入最小入住天数" },
-            min: 1,
+            min: { value: 1, message: "最小入住天数至少为 1" },
+            valueAsNumber: true,
           })}
           onBlur={(e) => {
+            register("minBookingLength").onBlur(e);
             handleOnBlur("minBookingLength");
           }}
         />
@@ -74,11 +58,14 @@ function UpdateSettingsForm() {
           type="number"
           id="max-nights"
           disabled={isUpdating}
+          defaultValue={settings.maxBookingLength}
           {...register("maxBookingLength", {
             required: { value: true, message: "请输入最大入住天数" },
-            min: 1,
+            min: { value: 1, message: "最大入住天数至少为 1" },
+            valueAsNumber: true,
           })}
           onBlur={(e) => {
+            register("maxBookingLength").onBlur(e);
             handleOnBlur("maxBookingLength");
           }}
         />
@@ -89,11 +76,14 @@ function UpdateSettingsForm() {
           type="number"
           id="max-guests"
           disabled={isUpdating}
+          defaultValue={settings.maxGuestsPerBooking}
           {...register("maxGuestsPerBooking", {
             required: { value: true, message: "请输入最大入住人数" },
-            min: 1,
+            min: { value: 1, message: "最大入住人数至少为 1" },
+            valueAsNumber: true,
           })}
           onBlur={(e) => {
+            register("maxGuestsPerBooking").onBlur(e);
             handleOnBlur("maxGuestsPerBooking");
           }}
         />
@@ -104,11 +94,14 @@ function UpdateSettingsForm() {
           type="number"
           id="breakfast-price"
           disabled={isUpdating}
+          defaultValue={settings.breakfastPrice}
           {...register("breakfastPrice", {
             required: { value: true, message: "请输入早餐价格" },
             min: { value: 0, message: "不能为负数" },
+            valueAsNumber: true,
           })}
           onBlur={(e) => {
+            register("breakfastPrice").onBlur(e);
             handleOnBlur("breakfastPrice");
           }}
         />

@@ -12,7 +12,7 @@ function LoginForm() {
     setValue,
     formState: { errors },
   } = useForm<LoginObj>({
-    defaultValues: { email: "1433634055@example.com", password: "2085775" },
+    defaultValues: { email: "black@example.com", password: "2085775" },
   });
   const { isLoggingIn, loginMutate } = useLogin();
 

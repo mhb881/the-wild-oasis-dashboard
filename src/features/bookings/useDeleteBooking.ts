@@ -1,4 +1,3 @@
-// d:\WorkSpace\Udemy\Jonas\ultimate-react-course-main\17-the-wild-oasis\the-wild-oasis-self\src\features\bookings\useDeleteBooking.ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 

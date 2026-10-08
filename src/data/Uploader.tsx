@@ -8,12 +8,22 @@ import { bookings } from "./data-bookings";
 import { cabins } from "./data-cabins";
 import { guests } from "./data-guests";
 
-// const originalSettings = {
-//   minBookingLength: 3,
-//   maxBookingLength: 30,
-//   maxGuestsPerBooking: 10,
-//   breakfastPrice: 15,
-// };
+const originalSettings = {
+  minBookingLength: 3,
+  maxBookingLength: 30,
+  maxGuestsPerBooking: 10,
+  breakfastPrice: 15,
+};
+
+async function createSettings() {
+  const { data } = await supabase.from("settings").select("id");
+  if (!data || data.length === 0) {
+    const { error } = await supabase
+      .from("settings")
+      .insert([originalSettings]);
+    if (error) console.log(error.message);
+  }
+}
 
 async function deleteGuests() {
   const { error } = await supabase.from("guests").delete().gt("id", 0);
@@ -123,6 +133,7 @@ export function Uploader() {
     await createGuests();
     await createCabins();
     await createBookings();
+    await createSettings();
 
     setIsLoading(false);
   }

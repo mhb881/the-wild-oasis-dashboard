@@ -13,19 +13,20 @@ export async function getSettings() {
     }
     return settings;
   } catch (err) {
-    console.error("Get cabin error:", err);
+    console.error("Get settings error:", err);
     throw err instanceof Error
       ? err
       : new Error("获取 settings 过程中发生未知错误");
   }
 }
 
-export async function updateSettings(newSettings: SettingInput) {
+export async function updateSettings(newSettings: Partial<SettingInput>) {
   try {
     const { data, error } = await supabase
       .from("settings")
       .update(newSettings)
       .eq("id", 1)
+      .select()
       .single();
     if (error) {
       console.error("Error updating settings:", error);
@@ -33,7 +34,7 @@ export async function updateSettings(newSettings: SettingInput) {
     }
     return data;
   } catch (err) {
-    console.error("Update cabin error:", err);
+    console.error("Update settings error:", err);
     throw err instanceof Error
       ? err
       : new Error("更新 settings 过程中发生未知错误");
