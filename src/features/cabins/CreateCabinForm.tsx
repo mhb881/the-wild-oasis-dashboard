@@ -58,7 +58,6 @@ function CreateCabinForm({
         { newCabin: data, id: editId! },
         {
           onSuccess: (data) => {
-            console.log(data);
             reset();
             handleClose?.();
           },
@@ -71,7 +70,6 @@ function CreateCabinForm({
       // 创建：直接传数据
       createCabinMutate(data, {
         onSuccess: (data) => {
-          console.log(data);
           reset();
           handleClose?.();
         },
@@ -83,7 +81,7 @@ function CreateCabinForm({
   };
 
   const onError: SubmitErrorHandler<CabinInput> = (errors) => {
-    console.log(errors);
+    console.error(errors);
   };
 
   return (

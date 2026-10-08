@@ -17,7 +17,6 @@ import { useUsers } from "./useUsers";
 export function UserTable() {
   const { users, isPending } = useUsers();
   const [searchParams] = useSearchParams();
-  console.log(users);
 
   if (isPending) return <Spinner />;
   if (!users || users.length === 0) return <Empty resourceName="用户" />;

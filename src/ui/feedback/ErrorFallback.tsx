@@ -16,7 +16,7 @@ function ErrorFallbackUI({
         <Heading as="h1" className="mb-4">
           Something went wrong 🧐
         </Heading>
-        <p className="mb-8 font-['Sono'] break-words text-gray-500 dark:text-gray-400">
+        <p className="mb-8 font-['Sono'] wrap-break-word text-gray-500 dark:text-gray-400">
           {errorMessage}
         </p>
         <Button size="lg" onClick={onReset}>

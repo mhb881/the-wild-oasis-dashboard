@@ -2,7 +2,6 @@ import { useUser } from "./useUser";
 
 function UserAvatar() {
   const { user } = useUser();
-  console.log(user);
   const { username, avatar } = user?.user_metadata || {};
 
   let curAvatar = avatar;

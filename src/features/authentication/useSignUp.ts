@@ -11,7 +11,6 @@ export function useSignUp() {
   } = useMutation({
     mutationFn: signUp,
     onSuccess: (data) => {
-      console.log(data);
       toast.success("注册成功，请前往邮箱完成验证后登录");
     },
     onError: (error) => {

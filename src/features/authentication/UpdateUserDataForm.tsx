@@ -26,7 +26,6 @@ function UpdateUserDataForm() {
   });
 
   function onSubmit(data: UpdateUserDataFormInput) {
-    console.log(data);
     if (!data.username) return;
     updateUserMutation(data, {
       onSuccess: () => {

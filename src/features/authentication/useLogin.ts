@@ -21,8 +21,6 @@ export function useLogin() {
   const { isPending: isLoggingIn, mutate: loginMutate } = useMutation({
     mutationFn: (input: LoginObj) => login(input),
     onSuccess: (data) => {
-      console.log(typeof data.user);
-
       // 3. 关键步骤：手动将用户数据注入缓存
       // 注意：这里的缓存 key（如 ["user"]）必须与你 useUser 钩子中 queryKey 一模一样！
       // 如果你使用的是 Supabase，返回的数据结构可能是 user.user，请根据 console.log 调整
