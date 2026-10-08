@@ -1,32 +1,48 @@
-﻿import type { ReactNode } from "react";
+import { useRouteError } from "react-router";
 
 import Button from "../buttons/Button";
+import Heading from "../data-display/Heading";
 
-interface ErrorFallbackProps {
-  error?: Error;
-  resetErrorBoundary?: () => void;
-  children?: ReactNode;
-}
-
-const ErrorFallback = ({ error, resetErrorBoundary, children }: ErrorFallbackProps) => {
+function ErrorFallbackUI({
+  errorMessage,
+  onReset,
+}: {
+  errorMessage: string;
+  onReset: () => void;
+}) {
   return (
-    <main className="h-screen bg-jonas-grey-50 flex items-center justify-center p-12">
-      <div className="bg-jonas-grey-0 border border-jonas-grey-100 p-12 flex-[0_1_96rem] text-center">
-        <h1 className="mb-4">Something went wrong 😢</h1>
-        <p className="font-mono mb-8 text-jonas-grey-500">
-          {error?.message || "An unexpected error occurred"}
+    <main className="flex h-screen items-center justify-center bg-gray-50 p-12 dark:bg-gray-900">
+      <div className="flex-[0_1_96rem] rounded-xl border border-gray-200 bg-white p-12 text-center shadow-sm dark:border-gray-800 dark:bg-gray-800">
+        <Heading as="h1" className="mb-4">
+          Something went wrong 🧐
+        </Heading>
+        <p className="mb-8 font-['Sono'] break-words text-gray-500 dark:text-gray-400">
+          {errorMessage}
         </p>
-        {children || (
-          resetErrorBoundary && (
-            <Button onClick={resetErrorBoundary} variant="primary">
-              Try again
-            </Button>
-          )
-        )}
+        <Button size="lg" onClick={onReset}>
+          Try again
+        </Button>
       </div>
     </main>
   );
-};
+}
 
-export default ErrorFallback;
+// 供 React Router 的 errorElement 使用
+export default function RouteErrorFallback() {
+  const routeError = useRouteError();
+  const errorMessage =
+    routeError instanceof Error
+      ? routeError.message
+      : typeof routeError === "string"
+        ? routeError
+        : (routeError as { statusText?: string; message?: string })?.message ||
+          (routeError as { statusText?: string })?.statusText ||
+          "An unexpected error occurred";
 
+  return (
+    <ErrorFallbackUI
+      errorMessage={errorMessage}
+      onReset={() => window.location.replace("/")}
+    />
+  );
+}

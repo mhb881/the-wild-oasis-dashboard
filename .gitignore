@@ -27,5 +27,4 @@ dist-ssr
 .env
 
 笔记
-
-src/vite-styles
+vite-styles

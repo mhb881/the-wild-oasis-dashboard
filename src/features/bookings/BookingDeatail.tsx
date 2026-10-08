@@ -1,6 +1,15 @@
 import { useNavigate } from "react-router";
 
-import { Button, ButtonText, ConfirmDelete, Heading, Modal, RowLayout, Spinner, Tag } from "../../ui";
+import {
+  Button,
+  ButtonText,
+  ConfirmDelete,
+  Heading,
+  Modal,
+  RowLayout,
+  Spinner,
+  Tag,
+} from "../../ui";
 import { useCheckout } from "../check-in-out/useCheckout";
 import BookingDataBox from "./BookingDataBox";
 import { useBooking } from "./useBooking";
@@ -13,12 +22,9 @@ function BookingDetail() {
   const navigate = useNavigate();
 
   if (isPending) return <Spinner />;
-  if (!booking) return null;
+  if (!booking) throw new Error("Booking not found");
 
   const { status, id: bookingId } = booking;
-
-  //   const moveBack = useMoveBack();
-  //   const navigate = useNavigate();
 
   const statusToTagName = {
     unconfirmed: "blue",

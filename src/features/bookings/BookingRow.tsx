@@ -1,6 +1,7 @@
 import { format, isToday } from "date-fns";
 import { zhCN } from "date-fns/locale";
 import {
+  EllipsisVertical,
   Eye,
   SquareArrowDown,
   SquareArrowUp,
@@ -13,7 +14,16 @@ import {
   formateCurrency,
 } from "../../lib/utils/helpers";
 import type { ItemOfGetBookings } from "../../types/types";
-import { ConfirmDelete, MenuItem, MenuList, Menus, MenuToggle, Modal, TableRow, Tag } from "../../ui";
+import {
+  ConfirmDelete,
+  MenuItem,
+  MenuList,
+  Menus,
+  MenuToggle,
+  Modal,
+  TableRow,
+  Tag,
+} from "../../ui";
 import { useCheckout } from "../check-in-out/useCheckout";
 import useDeleteBooking from "./useDeleteBooking";
 
@@ -52,7 +62,7 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
   return (
     <>
       <TableRow>
-        <td className="font-['Sono'] font-semibold text-gray-600">
+        <td className="font-['Sono'] text-base font-semibold text-gray-600">
           {cabinName}
         </td>
 
@@ -89,7 +99,7 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
           </Tag>
         </td>
 
-        <td className="font-['Sono'] font-semibold">
+        <td className="font-['Sono'] text-base font-semibold">
           {formateCurrency(totalPrice)}
         </td>
 
@@ -97,11 +107,11 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
           <Modal>
             <Menus>
               <MenuToggle>
-                <Eye />
+                <EllipsisVertical size={18} />
               </MenuToggle>
               <MenuList>
                 <MenuItem
-                  icon={<Eye />}
+                  icon={<Eye size={16} />}
                   onClick={() => navigate(`/bookings/${bookingId}`)}
                 >
                   详情
@@ -109,7 +119,7 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
 
                 {status === "unconfirmed" && (
                   <MenuItem
-                    icon={<SquareArrowDown />}
+                    icon={<SquareArrowDown size={16} />}
                     onClick={() => navigate(`/checkin/${bookingId}`)}
                   >
                     登记
@@ -118,7 +128,7 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
 
                 {status === "checked-in" && (
                   <MenuItem
-                    icon={<SquareArrowUp />}
+                    icon={<SquareArrowUp size={16} />}
                     onClick={() => checkout(bookingId!)}
                     disabled={isCheckingOut}
                   >
@@ -127,7 +137,7 @@ function BookingRow({ booking }: { booking: ItemOfGetBookings }) {
                 )}
 
                 <Modal.Trigger asChild>
-                  <MenuItem icon={<Trash2 />}>删除</MenuItem>
+                  <MenuItem icon={<Trash2 size={16} />}>删除</MenuItem>
                 </Modal.Trigger>
               </MenuList>
             </Menus>

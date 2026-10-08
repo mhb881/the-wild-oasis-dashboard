@@ -14,7 +14,7 @@ import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import Settings from "./pages/Settings";
 import Users from "./pages/Users";
-import { AppLayout, ProtectedRoute } from "./ui";
+import { AppLayout, ProtectedRoute, RouteErrorFallback } from "./ui";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -34,6 +34,7 @@ const router = createBrowserRouter([
         <AppLayout />
       </ProtectedRoute>
     ),
+    errorElement: <RouteErrorFallback />,
     children: [
       {
         index: true,
@@ -76,6 +77,7 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+    errorElement: <RouteErrorFallback />,
   },
   {
     path: "*",

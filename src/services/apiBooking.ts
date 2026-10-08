@@ -8,6 +8,7 @@ import type {
   ItemOfGetBookings,
   ItemOfGetBookingsAfterDate,
   ItemOfGetStaysAfterDate,
+  ItemOfGetStaysTodayActivity,
 } from "../types/types";
 import supabase from "./supabase";
 
@@ -124,6 +125,33 @@ export async function getBookingsAfterDate(
     throw new Error("获取预订记录失败");
   }
   return data;
+}
+
+/*
+这个函数用于获取 今日活动列表，包括：
+
+今天要入住的未确认订单；
+
+今天要退房的已入住订单。
+
+返回的数据包含预订信息以及关联的客人信息（姓名、国籍、国旗），方便前端展示今日待办事项。
+ */
+export async function getStaysTodayActivity(): Promise<
+  ItemOfGetStaysTodayActivity[]
+> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*, guests(fullName, nationality, countryFlag)")
+    .or(
+      `and(status.eq.unconfirmed,startDate.eq.${getToday()}),and(status.eq.checked-in,endDate.eq.${getToday()})`,
+    )
+    .order("created_at");
+
+  if (error) {
+    console.error(error);
+    throw new Error("获取入住记录失败");
+  }
+  return data ?? [];
 }
 
 // 获取指定日期之后的实际入住/留宿记录（用于统计近期入住率、留宿时长等）

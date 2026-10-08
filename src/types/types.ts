@@ -65,7 +65,13 @@ export type ItemOfGetStaysAfterDate = Booking & {
     fullName: string;
   };
 };
-
+/**
+ * .from("bookings")
+    .select("*, guests(fullName, nationality, countryFlag)")
+ */
+export type ItemOfGetStaysTodayActivity = Booking & {
+  guests: Pick<Guest, "fullName" | "nationality" | "countryFlag">;
+};
 /*
  guests: { fullName: guestName, email, country, countryFlag, nationalID },
     cabins: { name: cabinName },

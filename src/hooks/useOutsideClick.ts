@@ -14,6 +14,7 @@ export function useOutsideClick<T extends HTMLElement>(
       // 检查条件：
       // 1. ref.current 存在（元素已挂载）
       // 2. 点击的目标不在元素内部
+
       if (ref.current && !ref.current.contains(e.target as Node)) {
         handler(); // 触发回调
       }

@@ -1,14 +1,17 @@
-import SignUpForm from "../features/authentication/SignUpForm";
+import UserTable from "../features/users/UserTable";
+import UserTableOperations from "../features/users/UserTableOperations";
 import { Heading, RowLayout } from "../ui";
 
 function Users() {
   return (
     <>
-      <RowLayout>
-        <Heading type={"h1"}>创建用户</Heading>
+      <RowLayout type="horizontal">
+        <Heading type={"h1"}>用户管理</Heading>
+        <UserTableOperations />
       </RowLayout>
+
       <section className="flex w-full flex-col">
-        <SignUpForm />
+        <UserTable />
       </section>
     </>
   );

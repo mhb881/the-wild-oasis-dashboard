@@ -1,4 +1,4 @@
-﻿import { Calendar, House, HousePlus, type LucideProps, Settings, Users } from 'lucide-react';
+import { Calendar, House, HousePlus, type LucideProps, Settings, Users } from 'lucide-react';
 import type { ReactElement, ReactNode } from "react";
 import { Link, useLocation } from "react-router";
 

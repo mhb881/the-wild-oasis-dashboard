@@ -20,7 +20,7 @@ function BookingDataBox({ booking }: { booking: Booking }) {
     status,
     hasBreakfast,
     isPaid,
-    observation,
+    observations,
     created_at,
   } = booking;
 
@@ -115,10 +115,10 @@ function BookingDataBox({ booking }: { booking: Booking }) {
         </div>
       </section>
 
-      {observation && (
+      {observations && (
         <section className="rounded-lg bg-yellow-50 p-4 shadow-sm">
           <h4 className="mb-2 font-semibold text-yellow-800">备注</h4>
-          <p className="text-sm text-yellow-700">{observation}</p>
+          <p className="text-sm text-yellow-700">{observations}</p>
         </section>
       )}
     </div>

@@ -1,5 +1,13 @@
 import { PAGE_SIZE } from "../../lib/constants";
-import { Pagination, Spinner, Table, TableBody, TableFooter, TableHeader } from "../../ui";
+import {
+  Empty,
+  Pagination,
+  Spinner,
+  Table,
+  TableBody,
+  TableFooter,
+  TableHeader,
+} from "../../ui";
 import BookingRow from "./BookingRow";
 import useBookings from "./useBookings";
 
@@ -7,7 +15,7 @@ function BookingTable() {
   const { bookings, isPending, count: totalBookings } = useBookings();
 
   if (isPending) return <Spinner />;
-  if (!bookings) return null;
+  if (!bookings.length) return <Empty resourceName="bookings" />;
 
   const maxVisiblePageBtn = 5;
   const totalPage = Math.ceil(totalBookings / PAGE_SIZE);

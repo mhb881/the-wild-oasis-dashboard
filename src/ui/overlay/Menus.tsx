@@ -6,7 +6,6 @@ import {
   useEffect,
   useState,
 } from "react";
-import { createPortal } from "react-dom";
 
 import { useOutsideClick } from "../../hooks/useOutsideClick";
 import useScrollLock from "../../hooks/useScrollLock";
@@ -72,6 +71,7 @@ function Menus({ children, className, ...props }: MenusProps) {
   const [position, setPosition] = useState<Position | null>(null);
   const close = () => setIsOpen(false);
   const toggle = () => setIsOpen((cur) => !cur);
+  const ref = useOutsideClick<HTMLDivElement>(close, false);
 
   // 菜单展开时锁定背景滑动与滚动
   useScrollLock(isOpen);
@@ -80,7 +80,7 @@ function Menus({ children, className, ...props }: MenusProps) {
     <MenuContext.Provider
       value={{ isOpen, position, close, toggle, setPosition, setIsOpen }}
     >
-      <div className={cn("flex items-center", className)} {...props}>
+      <div ref={ref} className={cn("flex items-center", className)} {...props}>
         {children}
       </div>
     </MenuContext.Provider>
@@ -93,7 +93,6 @@ function MenuToggle({ className, ...props }: MenusToggleProps) {
 
   function handleClick(e: React.MouseEvent<HTMLButtonElement>) {
     if (e.defaultPrevented) return;
-
     e.stopPropagation();
 
     const rect = e.currentTarget.getBoundingClientRect();
@@ -123,7 +122,6 @@ function MenuToggle({ className, ...props }: MenusToggleProps) {
 
 function MenuList({ children, className, style, ...props }: MenusListProps) {
   const { isOpen, position, close } = useMenuContext();
-  const ref = useOutsideClick<HTMLUListElement>(close, false);
 
   // 按 Escape 键快速关闭菜单
   useEffect(() => {
@@ -137,9 +135,8 @@ function MenuList({ children, className, style, ...props }: MenusListProps) {
 
   if (!isOpen) return null;
 
-  return createPortal(
+  return (
     <ul
-      ref={ref}
       data-menu-content
       style={{
         right: position ? `${position.x}px` : undefined,
@@ -153,8 +150,7 @@ function MenuList({ children, className, style, ...props }: MenusListProps) {
       {...props}
     >
       {children}
-    </ul>,
-    document.body,
+    </ul>
   );
 }
 

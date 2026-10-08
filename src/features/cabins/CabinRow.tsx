@@ -49,17 +49,19 @@ function CabinRow({ cabin }: { cabin: Cabin }) {
           </div>
         </td>
 
-        <td className="font-['Sono'] font-semibold text-gray-600">{name}</td>
+        <td className="font-['Sono'] text-base font-semibold text-gray-600">
+          {name}
+        </td>
 
-        <td className="font-['Sono'] font-semibold text-gray-600">
+        <td className="font-['Sono'] text-base font-semibold text-gray-600">
           Fits up to {maxCapacity} guests
         </td>
 
-        <td className="font-['Sono'] font-semibold text-gray-600">
+        <td className="font-['Sono'] text-base font-semibold text-gray-600">
           {formateCurrency(regularPrice)}
         </td>
 
-        <td className="font-['Sono'] font-semibold text-green-500">
+        <td className="font-['Sono'] text-base font-semibold text-green-500">
           {discount ? formateCurrency(discount) : <span>&mdash;</span>}
         </td>
 
@@ -67,19 +69,19 @@ function CabinRow({ cabin }: { cabin: Cabin }) {
           <Modal>
             <Menus>
               <MenuToggle>
-                <EllipsisVertical />
+                <EllipsisVertical size={18} />
               </MenuToggle>
               <MenuList>
                 <Modal.Trigger name="copy" asChild>
-                  <MenuItem icon={<Copy />}>复制</MenuItem>
+                  <MenuItem icon={<Copy size={16} />}>复制</MenuItem>
                 </Modal.Trigger>
 
                 <Modal.Trigger name="edit" asChild>
-                  <MenuItem icon={<Edit />}>编辑</MenuItem>
+                  <MenuItem icon={<Edit size={16} />}>编辑</MenuItem>
                 </Modal.Trigger>
 
                 <Modal.Trigger name="delete" asChild>
-                  <MenuItem icon={<Trash2 />}>删除</MenuItem>
+                  <MenuItem icon={<Trash2 size={16} />}>删除</MenuItem>
                 </Modal.Trigger>
               </MenuList>
             </Menus>

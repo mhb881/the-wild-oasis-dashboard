@@ -2,9 +2,16 @@ import { useUser } from "./useUser";
 
 function UserAvatar() {
   const { user } = useUser();
+  console.log(user);
   const { username, avatar } = user?.user_metadata || {};
 
-  // 2. 首字母头像
+  let curAvatar = avatar;
+  if (!avatar && user) {
+    // 没有头像，但是有用户ID，获取随机头像
+    curAvatar = `https://api.dicebear.com/10.x/lorelei/svg?seed=${encodeURIComponent(user.id)}`;
+  }
+
+  // 2. 首字母字母头像
   const userInitial = username?.trim().charAt(0).toUpperCase() || "U";
 
   return (
@@ -14,10 +21,10 @@ function UserAvatar() {
     >
       {/* 头像容器：精简至 w-6 (24px)，边框改为 ring-1 以适应小尺寸 */}
       <div className="relative block h-10 w-10 shrink-0 overflow-hidden rounded-full ring-1 ring-gray-100 transition-transform duration-200 group-hover:scale-110">
-        {avatar ? (
+        {curAvatar ? (
           <img
             className="h-full w-full object-cover object-center"
-            src={avatar}
+            src={curAvatar}
             alt={`Avatar of ${username}`}
           />
         ) : (

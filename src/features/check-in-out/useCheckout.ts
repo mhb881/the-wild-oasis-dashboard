@@ -13,7 +13,7 @@ export function useCheckout() {
       }),
     onSuccess: (data) => {
       queryClient.invalidateQueries({
-        queryKey: ["booking"],
+        type: "active",
       });
       toast.success(`订单 #${data.id} 已成功退房`);
     },
